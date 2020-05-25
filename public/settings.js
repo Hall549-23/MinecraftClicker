@@ -1,5 +1,5 @@
 var ctx = canvas.getContext('2d');
-
+var inventory_context = inventory_canvas.getContext('2d');
 //LOAD TEXTURES
 var textures_blocks = new Image();
 var textures_tools = new Image();
@@ -68,7 +68,6 @@ class all_objects {
         let output = {}
         this.objects.forEach(element => {
             if (name.toLowerCase() == element.name.toLowerCase()){
-                console.log(element)
                 output = clone(element);
             }
         });

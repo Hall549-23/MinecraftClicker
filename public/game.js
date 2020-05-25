@@ -6,7 +6,7 @@ function Game(){
     }
     now_block = {x:0,y:0}
     show_inventory = true;
-    inventory = [
+    inventory_array = [
         
     ]
 
@@ -39,7 +39,9 @@ function Game(){
     function update() {
         ctx.clearRect(0,0,canvas.width,canvas.height);
         draw();
+        
         settings();
+        drawInventory();
         //camera.y += 1;
         requestAnimationFrame(update)
     }
@@ -60,7 +62,6 @@ function Game(){
                 blocks[blocks.length-1].push(AllObjects.getObjectByName('stone'));
             }
         }
-        console.log(blocks)
     }
 
     function settings() {
@@ -77,9 +78,11 @@ function Game(){
             'left':canvas.width/100 * 2,
             'top':canvas.height-canvas.width/2-50,
         });
-        $('#inventory .slots .row').css({
-            
-        });
+        
+        inventory_canvas.width = $('#inventory').width()-$('#inventory').width()/100*8.50;
+        inventory_canvas.height = $('#inventory').height() - $('#inventory').height()/100*19;
+        //inventory_canvas.width = $('#inventory').width();
+        //inventory_canvas.height = $('#inventory').height();
     }
 
     button.onclick = function(e) {
@@ -100,7 +103,6 @@ function Game(){
             $('#gameDiv #inventory').fadeOut(500);
             show_inventory = true;
         }
-        console.log('Test')
     });
     $('#gameDiv #canvas').click(function(){
         $('#gameDiv #inventory').fadeOut(500);
@@ -108,9 +110,9 @@ function Game(){
 
     function createInventrory(){
         for (var i = 0; i < 3; i++){
-            inventory.push([]);
+            inventory_array.push([]);
             for (var k = 0; k < 9; k++){
-                inventory[i].push({
+                inventory_array[i].push({
                     item:AllObjects.getObjectByName('grass'),
                     num:0,
                 });
@@ -118,21 +120,22 @@ function Game(){
         }
     }
     function drawInventory(){
-        for (var i = 0; i < inventory.length; i++){
-            $('#inventory .slots').append('<div class="row" id='+'row_'+i+'></div>');
-            for (var k = 0; k < inventory[i].length; k++){
-                if (inventory[i][k].item != null)
-                    $('#inventory .slots #row_'+i).append('<div><img x=0 width=100% src="'+inventory[i][k].item.img.src+'"></div>');
-                else
-                    $('#inventory .slots #row_'+i).append('<div></div>');
-                    
-                $('#inventory .slots .row div').css({
-                    'width':'',
-                    'height':''
-                })
+        
+        //console.log( $('#inventory').width())
+        for (var k = 0; k < 3; k++){
+            for (var i = 0; i < 9; i++){
+                inventory_context.drawImage(
+                    inventory_array[k][i].item.img,
+                    inventory_array[k][i].item.x*48,
+                    inventory_array[k][i].item.y*48,
+                    48,
+                    48,
+                    (i*inventory_canvas.width/100*11.2)+inventory_canvas.width/100*1.4,
+                    (k*inventory_canvas.width/100*11.2)+inventory_canvas.width/100*1.4,
+                    (inventory_canvas.width/100*10.2)/1.3,
+                    (inventory_canvas.width/100*10)/1.3);
             }
         }
-        
     }
 
     createInventrory();
