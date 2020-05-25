@@ -40,7 +40,7 @@ class all_objects {
             procFull: 100,
             name:'Grass',
             random_key:null,
-            full: 64
+            full: 5
         },
         {
             img:textures_blocks,

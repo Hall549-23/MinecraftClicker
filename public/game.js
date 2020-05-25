@@ -89,6 +89,7 @@ function Game(){
         if (blocks[now_block.y][now_block.x].proc <= blocks[now_block.y][now_block.x].procFull)
             blocks[now_block.y][now_block.x].proc += 20;
         else{
+            InventoryAdd(blocks[now_block.y][now_block.x], 1);
             blocks[now_block.y][now_block.x] = AllObjects.getObjectByName('empty');
             now_block.x+=1;
         }
@@ -113,29 +114,59 @@ function Game(){
             inventory_array.push([]);
             for (var k = 0; k < 9; k++){
                 inventory_array[i].push({
-                    item:AllObjects.getObjectByName('grass'),
+                    item:null,
                     num:0,
                 });
             }
         }
     }
     function drawInventory(){
-        
+
         //console.log( $('#inventory').width())
         for (var k = 0; k < 3; k++){
             for (var i = 0; i < 9; i++){
-                inventory_context.drawImage(
-                    inventory_array[k][i].item.img,
-                    inventory_array[k][i].item.x*48,
-                    inventory_array[k][i].item.y*48,
-                    48,
-                    48,
-                    (i*inventory_canvas.width/100*11.2)+inventory_canvas.width/100*1.4,
-                    (k*inventory_canvas.width/100*11.2)+inventory_canvas.width/100*1.4,
-                    (inventory_canvas.width/100*10.2)/1.3,
-                    (inventory_canvas.width/100*10)/1.3);
+                if (inventory_array[k][i].num != 0){
+                    inventory_context.drawImage(
+                        inventory_array[k][i].item.img,
+                        inventory_array[k][i].item.x*48,
+                        inventory_array[k][i].item.y*48,
+                        48,
+                        48,
+                        (i*inventory_canvas.width/100*11.2)+inventory_canvas.width/100*1.4,
+                        (k*inventory_canvas.width/100*11.2)+inventory_canvas.width/100*1.4,
+                        (inventory_canvas.width/100*10.2)/1.3,
+                        (inventory_canvas.width/100*10)/1.3);
+                    inventory_context.font = inventory_canvas.width/100*4.5 + 'px Arial';
+                    inventory_context.fillText(
+                        inventory_array[k][i].num, 
+                        (i*inventory_canvas.width/100*11.2)+inventory_canvas.width/100*8,
+                        ((k*inventory_canvas.width/100*11.2)+inventory_canvas.width/100*1.4) + (inventory_canvas.width/100*10)/1.2);
+                }
             }
         }
+    }
+
+    function InventoryAdd(item, num){
+        stop = false;
+        for (var i = 0; i < inventory_array.length; i++){
+            for (var k = 0; k < inventory_array[i].length; k++){
+                element = inventory_array[i][k];
+                if (element.num == 0){
+                    element.item = item;
+                    element.num = num;
+                    stop = true;
+                }else if (element.item.name == item.name && element.num+num <= item.full){
+                    element.num++;
+                    stop = true;
+                    //console.log(item.full)
+                }
+                if (stop)
+                    break;
+            }
+            if (stop)
+                break;
+        }
+    
     }
 
     createInventrory();
